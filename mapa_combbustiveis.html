@@ -1,0 +1,258 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	
+	
+<script src='https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css' rel='stylesheet' />
+<style>
+	@media only screen and (max-width: 480px) {
+		
+		body {
+  margin: 0;
+  padding: 0;
+}
+
+h2,
+h3,
+h4 {
+  margin: 2px;
+  font-size: 0.7em;
+}
+
+h3 {
+  font-size: 0.80em;
+}
+
+span {
+  font-size: 0.70em;
+}
+
+h4 {
+  font-size: 0.70em;
+}
+
+p {
+  font-size: 0.70em;
+  margin: 2px;
+  text-align: left;
+}
+
+/**
+* Create a position for the map
+* on the page */
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+/**
+* Set rules for how the map overlays
+* (information box and legend) will be displayed
+* on the page. */
+.map-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  margin-right: 10px;
+  font-family: Arial, sans-serif;
+  overflow: auto;
+  border-radius: 2px;
+}
+
+#features {
+  top: 0;
+  height: 75px;
+  margin-top: 10px;
+  width: 190px;
+}
+
+#legend {
+  padding: 1px;
+  box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.1);
+  line-height: 15px;
+  height: 90px;
+  margin-bottom: 10px;
+  width: 118px;
+}
+
+.legend-key {
+  display: inline-block;
+  border-radius: 20%;
+  width: 4px;
+  height: 6px;
+  margin-right: 3px;
+}
+
+
+}
+
+
+	
+	
+	@media only screen and (min-width: 480px) {
+	
+	body {
+  margin: 0;
+  padding: 0;
+}
+
+h2,
+h3,
+h4 {
+  margin: 10px;
+  font-size: 1em;
+}
+
+h3 {
+  font-size: 0.90em;
+}
+
+span {
+  font-size: 0.90em;
+}
+
+h4 {
+  font-size: 0.70em;
+}
+
+p {
+  font-size: 0.70em;
+  margin: 10px;
+  text-align: left;
+}
+
+/**
+* Create a position for the map
+* on the page */
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+/**
+* Set rules for how the map overlays
+* (information box and legend) will be displayed
+* on the page. */
+.map-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  margin-right: 20px;
+  font-family: Arial, sans-serif;
+  overflow: auto;
+  border-radius: 3px;
+}
+
+#features {
+  top: 0;
+  height: 125px;
+  margin-top: 20px;
+  width: 300px;
+}
+
+#legend {
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 30px;
+  height: 150px;
+  margin-bottom: 40px;
+  width: 170px;
+}
+
+.legend-key {
+  display: inline-block;
+  border-radius: 20%;
+  width: 7px;
+  height: 7px;
+  margin-right: 5px;
+}
+}
+</style>
+
+
+<head>
+	<title>Mapa de preços da gasolina em Alagoas</title>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="generator" content="Geany 1.34.1" />
+</head>
+
+<body>
+	
+	
+	
+	<div id='map'></div>
+	<div class='map-overlay' id='features'><h2>Preço da gasolina em cada cidade. </h2><div id='pd'><p>Passe o mouse sobre as cidades para ver mais detalhes.</p></div></div>
+	<div class='map-overlay' id='legend'></div>
+	
+
+
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoibHVjYXMwbWFpYSIsImEiOiJjamlpZWZjOGIweGV5M3JueG8yNmZjNmV0In0.M1a4PeEeYEx_V-ZcFcwvGQ';
+
+var map = new mapboxgl.Map({
+  container: 'map', // container id
+  style: 'mapbox://styles/lucas0maia/cjz2phhkg1czv1cu9cye2r6ww', // replace this with your style URL
+  center: [-36.479, -9.71], // starting position
+  zoom: 7 // starting zoom
+}); 
+
+map.on('load', function() {
+  // the rest of the code will go in here
+});
+
+var layers = ['Cidade sem postos' ,'R$4,21 - R$4,41', 'R$4,41 - R$4,61', 'R$4,61 - R$4,81', 'R$4,81 - R$5,18'];
+var colors = ['#AAABAB','#FED976', '#ED9E40', '#FC4E2A', '#E31A1C', '#BD0026'];
+
+for (i = 0; i < layers.length; i++) {
+  var layer = layers[i];
+  var color = colors[i];
+  var item = document.createElement('div');
+  var key = document.createElement('span');
+  key.className = 'legend-key';
+  key.style.backgroundColor = color;
+
+  var value = document.createElement('span');
+  value.innerHTML = layer;
+  item.appendChild(key);
+  item.appendChild(value);
+  legend.appendChild(item);
+}
+
+map.on('mousemove', function(e) {
+  var municipiosgasolina = map.queryRenderedFeatures(e.point, {
+    layers: ['municipiosgasolina']
+  });
+
+  if (municipiosgasolina.length > 0) {
+	if (municipiosgasolina[0].properties.rankinggasolina_MEDIA == undefined){
+		document.getElementById('pd').innerHTML = '<h4><strong>' + municipiosgasolina[0].properties.NM_MUNICIP + '</h4></strong><p><em>Município sem postos registrados</em></p>';
+		}else{
+			document.getElementById('pd').innerHTML = '<h4><strong>' + municipiosgasolina[0].properties.NM_MUNICIP + '</strong></h4><p><strong>R$<em>' + municipiosgasolina[0].properties.rankinggasolina_MEDIA + '</strong> Em média</em></p>' + '<p><em>Esta cidade tem  ' + municipiosgasolina[0].properties.rankinggasolina_QTD_POSTOS + ' posto(s) no total.</em></p>' ;
+		}
+  } else {
+    document.getElementById('pd').innerHTML = '<p>Selecione uma cidade para ver os detalhes!</p>';
+  }
+});
+
+map.getCanvas().style.cursor = 'default';
+
+
+
+
+</script>
+
+
+</body>
+
+</html>
